@@ -8,7 +8,6 @@ import {DataViewComponent} from './accordion-components/data-view/data-view.comp
 import {PatientSelectionComponent} from './accordion-components/patient-selection/patient-selection.component';
 import {ObservationSelectionComponent} from './accordion-components/observation-selection/observation-selection.component';
 import {DataSummaryComponent} from './accordion-components/data-summary/data-summary.component';
-import {StudyConstraintComponent} from './constraint-components/study-constraint/study-constraint.component';
 import {CombinationConstraintComponent} from './constraint-components/combination-constraint/combination-constraint.component';
 import {ConstraintComponent} from './constraint-components/constraint/constraint.component';
 import {ConceptConstraintComponent} from './constraint-components/concept-constraint/concept-constraint.component';
@@ -16,7 +15,7 @@ import {AutoCompleteModule} from 'primeng/components/autocomplete/autocomplete';
 import {Md2AccordionModule} from 'md2';
 import {CheckboxModule} from 'primeng/components/checkbox/checkbox';
 import {CalendarModule} from 'primeng/components/calendar/calendar';
-import {TreeModule} from 'primeng/primeng';
+import {InputTextModule, ToggleButtonModule, TreeModule} from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -26,8 +25,10 @@ import {TreeModule} from 'primeng/primeng';
     AutoCompleteModule,
     Md2AccordionModule,
     CheckboxModule,
+    InputTextModule,
     CalendarModule,
-    TreeModule
+    TreeModule,
+    ToggleButtonModule
   ],
   exports: [
     RouterModule
@@ -38,15 +39,13 @@ import {TreeModule} from 'primeng/primeng';
     PatientSelectionComponent,
     ObservationSelectionComponent,
     DataSummaryComponent,
-    StudyConstraintComponent,
     CombinationConstraintComponent,
     ConstraintComponent,
     ConceptConstraintComponent
   ],
   entryComponents: [
     ConstraintComponent,
-    CombinationConstraintComponent,
-    StudyConstraintComponent
+    CombinationConstraintComponent
   ]
 })
 export class DataSelectionModule {

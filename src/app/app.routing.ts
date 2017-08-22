@@ -5,20 +5,12 @@ import {Routes, RouterModule} from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/dashboard',
+    redirectTo: '/data-selection',
     pathMatch: 'full'
-  },
-  {
-    path: 'dashboard',
-    loadChildren: './modules/dashboard/dashboard.module#DashboardModule'
   },
   {
     path: 'data-selection',
     loadChildren: './modules/data-selection/data-selection.module#DataSelectionModule'
-  },
-  {
-    path: 'analysis',
-    loadChildren: './modules/analysis/analysis.module#AnalysisModule'
   },
   {
     path: 'export',

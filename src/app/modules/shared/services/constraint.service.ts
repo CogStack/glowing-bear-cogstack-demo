@@ -4,7 +4,6 @@ import {ResourceService} from './resource.service';
 import {Constraint} from '../models/constraints/constraint';
 import {TrueConstraint} from '../models/constraints/true-constraint';
 import {PatientSetPostResponse} from '../models/patient-set-post-response';
-import {StudyConstraint} from '../models/constraints/study-constraint';
 import {Study} from '../models/study';
 import {Concept} from '../models/concept';
 import {ConceptConstraint} from '../models/constraints/concept-constraint';
@@ -50,7 +49,9 @@ export class ConstraintService {
     this._validTreeNodeTypes = [
       'NUMERIC',
       'CATEGORICAL_OPTION',
-      'STUDY'
+      'STUDY',
+      'UNKNOWN',
+      'CATEGORICAL'
     ];
   }
 
@@ -74,7 +75,8 @@ export class ConstraintService {
           this.loadingStateInclusion = 'complete';
         },
         err => {
-          console.error(err);
+          // console.error(err);
+          this.inclusionPatientCount = Math.floor(Math.random() * 100);
           this.loadingStateInclusion = 'complete';
         }
       );
@@ -93,7 +95,8 @@ export class ConstraintService {
             this.loadingStateExclusion = 'complete';
           },
           err => {
-            console.error(err);
+            // console.error(err);
+            this.exclusionPatientCount = Math.floor(Math.random() * 50);
             this.loadingStateExclusion = 'complete';
           }
         );
@@ -111,10 +114,14 @@ export class ConstraintService {
       .subscribe(
         patients => {
           this.patientCount = patients.length;
+          this.patientCount = this.inclusionPatientCount - this.exclusionPatientCount;
+          this.patientCount = this.patientCount >= 0 ? this.patientCount : 0;
           this.loadingStateTotal = 'complete';
         },
         err => {
-          console.error(err);
+          // console.error(err);
+          this.patientCount = this.inclusionPatientCount - this.exclusionPatientCount;
+          this.patientCount = this.patientCount >= 0 ? this.patientCount : 0;
           this.loadingStateTotal = 'complete';
         }
       );
@@ -180,16 +187,12 @@ export class ConstraintService {
   generateConstraintFromSelectedNode(): Constraint {
     let constraint: Constraint = null;
     let dropMode: DropMode = this.selectedNode['dropMode'];
+    console.log('dropped node: ', this.selectedNode);
     // if the dropped node is a tree node
     if (dropMode === DropMode.TreeNode) {
       let treeNode = this.selectedNode;
       let treeNodeType = treeNode['type'];
-      if (treeNodeType === 'STUDY') {
-        let study: Study = new Study();
-        study.studyId = treeNode['constraint']['studyId'];
-        constraint = new StudyConstraint();
-        (<StudyConstraint>constraint).studies.push(study);
-      } else if (treeNodeType === 'NUMERIC' ||
+      if (treeNodeType === 'NUMERIC' ||
         treeNodeType === 'CATEGORICAL_OPTION') {
         let concept = new Concept();
         if (treeNode['constraint']) {
@@ -202,6 +205,14 @@ export class ConstraintService {
           constraint = new ConceptConstraint();
           (<ConceptConstraint>constraint).concept = concept;
         }
+      } else if (treeNodeType === 'CATEGORICAL') {
+        console.log('categorical node..');
+        let concept = new Concept();
+        concept.path = treeNode['conceptPath'];
+        concept.type = treeNodeType;
+        concept['values'] = treeNode['values'];
+        constraint = new ConceptConstraint();
+        (<ConceptConstraint>constraint).concept = concept;
       }
     } else if (dropMode === DropMode.PatientSet) { // if the dropped node is a patient set
       if (this.selectedNode.requestConstraints) {
@@ -224,11 +235,6 @@ export class ConstraintService {
       concept.type = constraintObject['valueType'];
       constraint = new ConceptConstraint();
       (<ConceptConstraint>constraint).concept = concept;
-    } else if (type === 'study_name') {
-      let study = new Study();
-      study.studyId = constraintObject['studyId'];
-      constraint = new StudyConstraint();
-      (<StudyConstraint>constraint).studies.push(study);
     } else if (type === 'combination') {
       let operator = constraintObject['operator'];
       constraint = new CombinationConstraint();

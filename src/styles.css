@@ -196,3 +196,7 @@ legend {
  * should be left empty
  */
 .is-not-leaf {}
+
+.ui-autocomplete-token {
+  margin-bottom: 1px;
+}

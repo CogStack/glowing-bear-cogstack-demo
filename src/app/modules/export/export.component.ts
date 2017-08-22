@@ -45,7 +45,9 @@ export class ExportComponent implements OnInit {
     this.dataFormats = [];
     this.updateExportJobs();
     this.timer.newTimer('30sec', 30);
-    this.timer.subscribe('30sec', e => this.updateExportJobs());
+    this.timer.subscribe('30sec', (function() {
+      this.updateExportJobs();
+    }).bind(this));
   }
 
   ngOnInit() {

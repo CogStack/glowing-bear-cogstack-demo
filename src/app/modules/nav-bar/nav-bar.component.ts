@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, NavigationEnd} from '@angular/router';
 import {MenuItem} from "primeng/components/common/api";
 
@@ -12,9 +12,7 @@ export class NavBarComponent implements OnInit {
   private _items: MenuItem[];
   private _activeItem: MenuItem;
 
-  isDashboard = true;
   isDataSelection = false;
-  isAnalysis = false;
   isExport = false;
 
   constructor(private router: Router) {
@@ -22,9 +20,7 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit() {
     this._items = [
-      {label: 'Dashboard', routerLink: '/dashboard'},
       {label: 'Data Selection', routerLink: '/data-selection'},
-      {label: 'Analysis', routerLink: '/analysis'},
       {label: 'Export', routerLink: '/export'}
     ];
     this.router.events.subscribe((event) => {
@@ -36,22 +32,13 @@ export class NavBarComponent implements OnInit {
   }
 
   updateNavbar(whichStep: string) {
-    this.isDashboard = (whichStep === 'dashboard' || whichStep == '');
-    this.isDataSelection = (whichStep === 'data-selection');
-    this.isAnalysis = (whichStep === 'analysis');
+    this.isDataSelection = (whichStep === 'data-selection' || whichStep === '');
     this.isExport = (whichStep === 'export');
 
-    if(this.isDashboard) {
+    if (this.isDataSelection) {
       this._activeItem = this._items[0];
-    }
-    else if(this.isDataSelection) {
+    } else if (this.isExport) {
       this._activeItem = this._items[1];
-    }
-    else if(this.isAnalysis) {
-      this._activeItem = this._items[2];
-    }
-    else if(this.isExport) {
-      this._activeItem = this._items[3];
     }
   }
 

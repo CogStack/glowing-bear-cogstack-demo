@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ResourceService} from './resource.service';
-import {Study} from '../models/study';
 import {Constraint} from '../models/constraints/constraint';
 import {Concept} from '../models/concept';
-import {StudyConstraint} from '../models/constraints/study-constraint';
 import {ConceptConstraint} from '../models/constraints/concept-constraint';
 import {CombinationConstraint} from '../models/constraints/combination-constraint';
 import {SavedSet} from '../models/saved-set';
@@ -22,8 +20,7 @@ export class DimensionRegistryService {
   public selectedTreeNodes: TreeNode[] = [];
   // the status indicating the when the tree is being loaded or finished loading
   public loadingTreeNodes: LoadingState = 'complete';
-  private studies: Study[] = [];
-  private studyConstraints: Constraint[] = [];
+
   private concepts: Concept[] = [];
   private conceptConstraints: Constraint[] = [];
 
@@ -37,52 +34,13 @@ export class DimensionRegistryService {
 
   constructor(private resourceService: ResourceService) {
     this.updateEmptyConstraints();
-    this.updateStudies();
     this.updateConcepts();
     this.updatePatientSets();
   }
 
   updateEmptyConstraints() {
     this.allConstraints.push(new CombinationConstraint());
-    this.allConstraints.push(new StudyConstraint());
     this.allConstraints.push(new ConceptConstraint());
-  }
-
-  updateStudies() {
-    this.resourceService.getStudies()
-      .subscribe(
-        studies => {
-          // reset studies and study constraints
-          this.studies = studies;
-          this.studyConstraints = [];
-          studies.forEach(study => {
-            let constraint = new StudyConstraint();
-            constraint.studies.push(study);
-            this.studyConstraints.push(constraint);
-            this.allConstraints.push(constraint);
-          });
-        },
-        err => console.error(err)
-      );
-  }
-
-  loadTreeNext(parentNode) {
-    this.resourceService.getTreeNodes(parentNode['fullName'], 2, true, true)
-      .subscribe(
-        (treeNodes: object[]) => {
-          // console.log('loading: ', parentNode['fullName']);
-          const refNode = treeNodes && treeNodes.length > 0 ? treeNodes[0] : undefined;
-          const children = refNode ? refNode['children'] : undefined;
-          if (children) {
-            parentNode['children'] = children;
-            this.processTreeNode(parentNode);
-            children.forEach((function (node) {
-              this.loadTreeNext(node);
-            }).bind(this));
-          }
-        },
-        err => console.error(err)
-      );
   }
 
   /** Extracts concepts (and later possibly other dimensions) from the
@@ -109,10 +67,12 @@ export class DimensionRegistryService {
 
         let concept = new Concept();
         // TODO: retrieve concept path in less hacky manner:
-        let path = node['constraint']['path'];
-        concept.path = path ? path : node['fullName'];
+        concept.path = node['conceptPath']
         concept.type = node['type'];
         this.concepts.push(concept);
+        if (node['type'] === 'CATEGORICAL') {
+          concept['values'] = node['values'];
+        }
 
         let constraint = new ConceptConstraint();
         constraint.concept = concept;
@@ -138,6 +98,12 @@ export class DimensionRegistryService {
       node['label'] = node['label'] + ' ⚆';
     }
 
+    // if (node['name'].indexOf('consent') !== -1 ||
+    //   node['name'].indexOf('demography') !== -1 ||
+    //   node['name'].indexOf('medical') !== -1) {
+    //   node['expanded'] = true;
+    // }
+
     // If this node has children, drill down
     if (node['children']) {
       // Recurse
@@ -161,21 +127,12 @@ export class DimensionRegistryService {
   updateConcepts() {
     this.loadingTreeNodes = 'loading';
     // Retrieve all tree nodes and extract the concepts iteratively
-    this.resourceService.getTreeNodes('\\', 2, false, true)
-      .subscribe(
-        (treeNodes: object[]) => {
-          this.loadingTreeNodes = 'complete';
-          // reset concepts and concept constraints
-          this.concepts = [];
-          this.conceptConstraints = [];
-          this.processTreeNodes(treeNodes);
-          treeNodes.forEach((function (node) {
-            this.treeNodes.push(node); // to ensure the treeNodes pointer remains unchanged
-            this.loadTreeNext(node);
-          }).bind(this));
-        },
-        err => console.error(err)
-      );
+    let allTreeNodes = this.resourceService.getAllTreeNodes();
+    this.loadingTreeNodes = 'complete';
+    this.concepts = [];
+    this.conceptConstraints = [];
+    this.treeNodes = allTreeNodes;
+    this.processTreeNodes(allTreeNodes);
   }
 
   updatePatientSets() {
@@ -195,10 +152,6 @@ export class DimensionRegistryService {
         },
         err => console.error(err)
       );
-  }
-
-  getStudies() {
-    return this.studies;
   }
 
   getConcepts() {

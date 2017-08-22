@@ -57,6 +57,7 @@ export class TreeNodesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // this.update();
     this.observer = new MutationObserver(this.update.bind(this));
     const config = {
       attributes: false,

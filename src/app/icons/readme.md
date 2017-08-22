@@ -1,4 +1,3 @@
-
 ### Follow the steps to create customized icon fonts:
 
 (source: [http://mediatemple.net/blog/tips/creating-implementing-icon-font-tutorial/](http://mediatemple.net/blog/tips/creating-implementing-icon-font-tutorial/))

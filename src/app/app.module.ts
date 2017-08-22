@@ -8,9 +8,7 @@ import {AppComponent} from './app.component';
 
 import {EndpointService} from './modules/shared/services/endpoint.service';
 import {DataSelectionModule} from './modules/data-selection/data-selection.module';
-import {AnalysisModule} from './modules/analysis/analysis.module';
 import {ExportModule} from './modules/export/export.module';
-import {DashboardModule} from './modules/dashboard/dashboard.module';
 import {WorkflowService} from './modules/shared/services/workflow.service';
 import {ResourceService} from './modules/shared/services/resource.service';
 import {DimensionRegistryService} from './modules/shared/services/dimension-registry.service';
@@ -35,9 +33,7 @@ export function initConfig(config: AppConfig) {
     BrowserAnimationsModule,
     routing,
     NavBarModule,
-    DashboardModule,
     DataSelectionModule,
-    AnalysisModule,
     ExportModule,
     SidePanelModule
   ],
