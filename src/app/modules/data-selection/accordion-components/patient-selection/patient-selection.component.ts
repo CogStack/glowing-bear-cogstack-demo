@@ -7,6 +7,7 @@ import {
 import {ConstraintComponent} from '../../constraint-components/constraint/constraint.component';
 import {CombinationConstraint} from '../../../shared/models/constraints/combination-constraint';
 import {ConstraintService} from '../../../shared/services/constraint.service';
+import {Message} from "primeng/primeng";
 
 
 @Component({
@@ -15,7 +16,7 @@ import {ConstraintService} from '../../../shared/services/constraint.service';
   styleUrls: ['./patient-selection.component.css'],
   animations: [
     trigger('notifyState', [
-      transition( 'loading => complete', [
+      transition('loading => complete', [
         style({
           background: 'rgba(51, 156, 144, 0.5)'
         }),
@@ -29,6 +30,7 @@ import {ConstraintService} from '../../../shared/services/constraint.service';
 export class PatientSelectionComponent implements OnInit {
 
   patientSetName = '';
+  msgs: Message[] = [];
 
   @ViewChild('rootInclusionConstraintComponent') rootInclusionConstraintComponent: ConstraintComponent;
   @ViewChild('rootExclusionConstraintComponent') rootExclusionConstraintComponent: ConstraintComponent;
@@ -66,6 +68,10 @@ export class PatientSelectionComponent implements OnInit {
 
   onSavePatientSetBtnClick() {
     this.constraintService.savePatients(this.patientSetName);
+    this.msgs = [];
+    let details = 'The patient set with name ' + this.patientSetName + ' has been saved';
+    this.msgs.push({severity: 'info', summary: 'Patient set saved!', detail: details});
+    this.patientSetName = '';
   }
 
   onTreeNodeDropOnPatientSetNameField(event) {

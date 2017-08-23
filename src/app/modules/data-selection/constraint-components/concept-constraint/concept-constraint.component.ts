@@ -67,10 +67,18 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
         this.selectedCategories = aggregate.values;
         this.suggestedCategories = aggregate.values;
       } else if (this.isSpecialCategorical()) {
-        this.selectedCategoryObjects.push({
-          word: '',
-          selectedCategories: []
-        });
+        if (constraint.concept['selectedCategoryObjects']) {
+          this.selectedCategoryObjects = constraint.concept['selectedCategoryObjects'];
+        } else {
+          this.selectedCategoryObjects.push({
+            word: '',
+            selectedCategories: []
+          });
+        }
+
+        if (constraint.concept['selectedContexts']) {
+          this.selectedContexts = constraint.concept['selectedContexts'];
+        }
         this.suggestedCategories = [].concat(constraint.concept['values']);
         this.allCategories = [].concat(this.suggestedCategories);
         this.allCategoryChecks = [];
@@ -188,10 +196,9 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
         conceptConstraint.values.push(newVal);
       }
     } else if (this.isSpecialCategorical()) {
-      // for (let catObj of this.allCategoryChecks) {
-      //   const cat = catObj['category'];
-      //   catObj['checked'] = (this.selectedCategories.indexOf(cat) === -1);
-      // }
+      (<ConceptConstraint>this.constraint).concept['selectedCategoryObjects'] = this.selectedCategoryObjects;
+      console.log('update selectedCategoryObjects: ',
+        (<ConceptConstraint>this.constraint).concept['selectedCategoryObjects'] );
     }
 
     this.constraintService.update();
@@ -260,6 +267,7 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
       }
       selectedCategoryObject['selectedCategories'] = [];
       this.removeEmptySelectedCategoryObjects();
+      this.updateConceptValues();
     }
   }
 
@@ -343,6 +351,7 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
     selectedCategoryObject['selectedCategories'].splice(index, 1);
     this.putCategoryToAvailableCategories(category);
     this.removeEmptySelectedCategoryObjects();
+    this.updateConceptValues();
   }
 
   handleCategoryCheckChange(event) {
@@ -354,6 +363,7 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
         }
       }
     }
+    this.updateConceptValues();
   }
 
   checkIfCategoryIsAlreadySelected(category: string) {
@@ -405,12 +415,17 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
   }
 
   removeEmptySelectedCategoryObjects() {
-    for(let cat of this.selectedCategoryObjects) {
-      if(cat['word'] !== '' && cat['selectedCategories'].length === 0) {
+    for (let cat of this.selectedCategoryObjects) {
+      if (cat['word'] !== '' && cat['selectedCategories'].length === 0) {
         let index = this.selectedCategoryObjects.indexOf(cat);
         this.selectedCategoryObjects.splice(index, 1);
       }
     }
+  }
+
+  contextCheck() {
+    console.log('contextCheck, ', this.selectedContexts);
+    (<ConceptConstraint>this.constraint).concept['selectedContexts'] = this.selectedContexts;
   }
 
   /*

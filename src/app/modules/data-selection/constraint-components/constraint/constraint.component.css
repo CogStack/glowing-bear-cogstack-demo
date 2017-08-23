@@ -16,6 +16,7 @@
 .constraint-remove-btn {
   margin-right: 3px;
   margin-top: 3px;
+  margin-left: 2px;
   border: none;
   color: lightgray;
 }
@@ -23,6 +24,17 @@
 .constraint-remove-btn:hover {
   color: white;
 }
+
+/*.constraint-edit-btn {*/
+  /*margin-right: 3px;*/
+  /*margin-top: 3px;*/
+  /*border: none;*/
+  /*color: lightgray;*/
+/*}*/
+
+/*.constraint-edit-btn:hover {*/
+  /*color: white;*/
+/*}*/
 
 .form-inline * {
   margin: 6px;

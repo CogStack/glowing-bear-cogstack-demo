@@ -137,21 +137,21 @@ export class DimensionRegistryService {
 
   updatePatientSets() {
     // reset patient sets
-    this.resourceService.getPatientSets()
-      .subscribe(
-        sets => {
-          // this is to retain the original reference pointer to the array
-          this.patientSets.length = 0;
-
-          // reverse the sets so that the latest patient set is on top
-          sets.reverse();
-          sets.forEach(set => {
-            set.name = set.description;
-            this.patientSets.push(set);
-          });
-        },
-        err => console.error(err)
-      );
+    // this.resourceService.getPatientSets()
+    //   .subscribe(
+    //     sets => {
+    //       // this is to retain the original reference pointer to the array
+    //       this.patientSets.length = 0;
+    //
+    //       // reverse the sets so that the latest patient set is on top
+    //       sets.reverse();
+    //       sets.forEach(set => {
+    //         set.name = set.description;
+    //         this.patientSets.push(set);
+    //       });
+    //     },
+    //     err => console.error(err)
+    //   );
   }
 
   getConcepts() {

@@ -1,6 +1,6 @@
 import {SavedSet} from "./saved-set";
 
-export class PatientSet extends SavedSet{
+export class PatientSet extends SavedSet {
   private _description: string;
   private _setSize: number;
   private _status: string;

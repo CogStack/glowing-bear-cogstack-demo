@@ -62,6 +62,7 @@ export class CombinationConstraintComponent extends ConstraintComponent implemen
   }
 
   onSelect(selectedConstraint) {
+    console.log('on select, constraint: ', this.selectedConstraint);
     if (this.selectedConstraint != null) {
 
       // Create a copy of the selected constraint

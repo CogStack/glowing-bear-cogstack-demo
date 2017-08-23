@@ -97,7 +97,7 @@
     </div>
   </div>
 
-  <div *ngIf="isSpecialCategorical()" class="v-align-center form-inline">
+  <div *ngIf="isSpecialCategorical()" class="v-align-center form-inline" (click)="contextCheck()">
     <span style="margin-left: 10px; margin-right: 10px; color: #737373;"><small>Context:</small></span>
     <p-checkbox name="group1" value="positive" [(ngModel)]="selectedContexts"></p-checkbox>
     <span style="margin-left: -5px; margin-right: 5px;">Positive</span>

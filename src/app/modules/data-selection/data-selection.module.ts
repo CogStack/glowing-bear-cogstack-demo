@@ -15,7 +15,7 @@ import {AutoCompleteModule} from 'primeng/components/autocomplete/autocomplete';
 import {Md2AccordionModule} from 'md2';
 import {CheckboxModule} from 'primeng/components/checkbox/checkbox';
 import {CalendarModule} from 'primeng/components/calendar/calendar';
-import {InputTextModule, ToggleButtonModule, TreeModule} from 'primeng/primeng';
+import {GrowlModule, InputTextModule, ToggleButtonModule, TreeModule} from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -28,7 +28,8 @@ import {InputTextModule, ToggleButtonModule, TreeModule} from 'primeng/primeng';
     InputTextModule,
     CalendarModule,
     TreeModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+    GrowlModule
   ],
   exports: [
     RouterModule

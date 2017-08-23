@@ -4,13 +4,13 @@ import {ResourceService} from './resource.service';
 import {Constraint} from '../models/constraints/constraint';
 import {TrueConstraint} from '../models/constraints/true-constraint';
 import {PatientSetPostResponse} from '../models/patient-set-post-response';
-import {Study} from '../models/study';
 import {Concept} from '../models/concept';
 import {ConceptConstraint} from '../models/constraints/concept-constraint';
 import {CombinationState} from '../models/constraints/combination-state';
 import {NegationConstraint} from '../models/constraints/negation-constraint';
 import {DropMode} from '../models/drop-mode';
 import {DimensionRegistryService} from './dimension-registry.service';
+import {PatientSet} from "../models/patient-set";
 
 type LoadingState = 'loading' | 'complete';
 
@@ -27,6 +27,8 @@ export class ConstraintService {
   private _patientSetPostResponse: PatientSetPostResponse;
   private _rootInclusionConstraint: CombinationConstraint;
   private _rootExclusionConstraint: CombinationConstraint;
+
+  public savedPatientSets: PatientSet[];
 
   loadingStateInclusion: LoadingState = 'complete';
   loadingStateExclusion: LoadingState = 'complete';
@@ -53,6 +55,7 @@ export class ConstraintService {
       'UNKNOWN',
       'CATEGORICAL'
     ];
+    this.savedPatientSets = [];
   }
 
   update() {
@@ -288,6 +291,15 @@ export class ConstraintService {
     let intersectionConstraint =
       this.generateIntersectionConstraint(this.rootInclusionConstraint, this.rootExclusionConstraint);
 
+    let patientSet: PatientSet = new PatientSet('id', patientSetName);
+    // patientSet['inclusionConstraint'] = JSON.parse(JSON.stringify(this.rootInclusionConstraint));
+    // patientSet['exclusionConstraint'] = JSON.parse(JSON.stringify(this.rootExclusionConstraint));
+    patientSet['inclusionConstraint'] = this.deepCopy(this.rootInclusionConstraint);
+    patientSet['exclusionConstraint'] = this.deepCopy(this.rootExclusionConstraint);
+
+    patientSet['setSize'] = this.patientCount;
+    this.savedPatientSets.push(patientSet);
+
     // call the backend api to save patient set of that constraint
     // and update the dimension registry service for the patient set list
     this.resourceService.savePatients(patientSetName, intersectionConstraint)
@@ -300,6 +312,17 @@ export class ConstraintService {
           console.error(err);
         }
       );
+  }
+
+  deepCopy(oldObj: any) {
+    var newObj = oldObj;
+    if (oldObj && typeof oldObj === "object") {
+      newObj = Object.prototype.toString.call(oldObj) === "[object Array]" ? [] : {};
+      for (var i in oldObj) {
+        newObj[i] = this.deepCopy(oldObj[i]);
+      }
+    }
+    return newObj;
   }
 
   get patientCount(): number {
