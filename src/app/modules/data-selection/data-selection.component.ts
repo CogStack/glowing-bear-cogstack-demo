@@ -22,7 +22,7 @@ export class DataSelectionComponent implements OnInit {
     // if the 'select observation' accordion is opened,
     // set tree selection mode to checkbox on the left side
     // else set to empty string
-    this.dimensionRegistryService.treeSelectionMode = event.index === 1 ? 'checkbox' : '';
+    // this.dimensionRegistryService.treeSelectionMode = event.index === 1 ? 'checkbox' : '';
   }
 
   /**
@@ -32,9 +32,9 @@ export class DataSelectionComponent implements OnInit {
   closeAccordion(event) {
     // if the 'select observation' accordion is closed,
     // set treeSelectionMode to empty string
-    if (event.index === 1) {
-      this.dimensionRegistryService.treeSelectionMode = '';
-    }
+    // if (event.index === 1) {
+    //   this.dimensionRegistryService.treeSelectionMode = '';
+    // }
   }
 
 }

@@ -1,3 +1,25 @@
-<p>
-  data-view works!
-</p>
+<div>
+  <p-dataTable [value]="patients"
+               [rows]="5"
+               [paginator]="true"
+               [pageLinks]="3"
+               [rowsPerPageOptions]="[5,10,20]">
+    <p-column field="id" header="Patient ID" [sortable]="true"></p-column>
+    <p-column field="confidence" header="Confidence Level Score" [sortable]="true"></p-column>
+    <p-column field="validation" header="Patient Validation" [sortable]="true">
+      <ng-template let-col let-patient="rowData" pTemplate="body">
+        <p-dropdown [options]="validationOptions" [(ngModel)]="patient['validation']" ></p-dropdown>
+      </ng-template>
+    </p-column>
+    <!--<p-column field="interested" header="Patient Interested" [sortable]="true"></p-column>-->
+    <p-column field="interested" header="Patient Interested" [sortable]="true">
+      <ng-template let-patient="rowData" pTemplate="body">
+        <p-toggleButton *ngIf="patient['interested'] !== 'NA'" [(ngModel)]="patient['interested']"></p-toggleButton>
+        <span *ngIf="patient['interested'] === 'NA'"> NA </span>
+      </ng-template>
+    </p-column>
+  </p-dataTable>
+  <br>
+  <button type="button" class="btn btn-primary" (click)="onExportPatientTableClick()"> Export patient data </button>
+</div>
+
