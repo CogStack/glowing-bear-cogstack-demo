@@ -67,6 +67,10 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
         this.selectedCategories = aggregate.values;
         this.suggestedCategories = aggregate.values;
       } else if (this.isSpecialCategorical()) {
+        this.selectedCategoryObjects.push({
+          word: '',
+          selectedCategories: []
+        });
         this.suggestedCategories = [].concat(constraint.concept['values']);
         this.allCategories = [].concat(this.suggestedCategories);
         this.allCategoryChecks = [];
@@ -219,15 +223,15 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
 
   selectAllCategories() {
     // console.log('select all values for concept: ', (<ConceptConstraint>this.constraint).concept);
+    let concept = (<ConceptConstraint>this.constraint).concept;
     if (!this.isSpecialCategorical()) {
       this.selectedCategories = (<ConceptConstraint>this.constraint).concept.aggregate.values;
-    }
-    let concept = (<ConceptConstraint>this.constraint).concept;
-    if (concept.path.indexOf('consent') !== -1) {
-      this.selectedCategories = ['yes', 'no'];
-    } else if (concept.path.indexOf('gender') !== -1) {
-      this.selectedCategories = ['male', 'female'];
-    } else if (this.isSpecialCategorical()) {
+      if (concept.path.indexOf('consent') !== -1) {
+        this.selectedCategories = ['yes', 'no'];
+      } else if (concept.path.indexOf('gender') !== -1) {
+        this.selectedCategories = ['male', 'female'];
+      }
+    } else {
       for (let catobj of this.allCategoryChecks) {
         if (catobj['checked'] && catobj['shown']) {
           this.putCategoryToSelectedCategories(catobj['category']);
@@ -244,19 +248,59 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
         this.putCategoryToAvailableCategories(cat);
       }
     }
-
     this.selectedCategories = [];
     this.updateConceptValues();
   }
 
+  clearAllCategoriesWithFilter(filterWord) {
+    let selectedCategoryObject = this.getSelectedCategoryObject(filterWord);
+    if (selectedCategoryObject) {
+      for (let cat of selectedCategoryObject['selectedCategories']) {
+        this.putCategoryToAvailableCategories(cat);
+      }
+      selectedCategoryObject['selectedCategories'] = [];
+      this.removeEmptySelectedCategoryObjects();
+    }
+  }
+
   putCategoryToSelectedCategories(category: string) {
-    if (this.selectedCategories.indexOf(category) === -1) {
-      this.selectedCategories.push(category);
+    /*
+     * old approach for a singular selectecdCategories object
+     */
+    // if (this.selectedCategories.indexOf(category) === -1) {
+    //   this.selectedCategories.push(category);
+    //   let found = this.getCategoryObject(category);
+    //   if (found) {
+    //     found['checked'] = false;
+    //   }
+    // }
+
+    /*
+     * new approach for one selectedCategories object per filter word
+     */
+    let word = this.getCategoryFilterWord();
+    let selectedCategoryObject = this.getSelectedCategoryObject(word);
+    if (selectedCategoryObject) {
+      let selectedCategories = selectedCategoryObject['selectedCategories'];
+      if (selectedCategories.indexOf(category) === -1) {
+        selectedCategories.push(category);
+        let found = this.getCategoryObject(category);
+        if (found) {
+          found['checked'] = false;
+        }
+      }
+    } else {
+      let newObj = {
+        word: word,
+        selectedCategories: [category]
+      };
       let found = this.getCategoryObject(category);
       if (found) {
         found['checked'] = false;
       }
+      this.selectedCategoryObjects.push(newObj);
     }
+    // console.log('selectedCategoryObjects: ', this.selectedCategoryObjects);
   }
 
   putCategoryToAvailableCategories(category: string) {
@@ -292,13 +336,33 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
     this.updateConceptValues();
   }
 
+  onUnselectCategoryWithFilter(category, word) {
+    let selectedCategoryObject = this.getSelectedCategoryObject(word);
+    // For some funny reason, the category is still in the list when this handler is invoked
+    let index = selectedCategoryObject['selectedCategories'].indexOf(category);
+    selectedCategoryObject['selectedCategories'].splice(index, 1);
+    this.putCategoryToAvailableCategories(category);
+    this.removeEmptySelectedCategoryObjects();
+  }
+
   handleCategoryCheckChange(event) {
     for (let catObj of this.allCategoryChecks) {
       if (!catObj['checked']) {
         const cat = catObj['category'];
-        this.putCategoryToSelectedCategories(cat);
+        if (!this.checkIfCategoryIsAlreadySelected(cat)) {
+          this.putCategoryToSelectedCategories(cat);
+        }
       }
     }
+  }
+
+  checkIfCategoryIsAlreadySelected(category: string) {
+    for (let cat of this.selectedCategoryObjects) {
+      if (cat['selectedCategories'].indexOf(category) !== -1) {
+        return true;
+      }
+    }
+    return false;
   }
 
   filterAvailableCategories(event) {
@@ -325,6 +389,28 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
       }
     }
     return count;
+  }
+
+  getCategoryFilterWord() {
+    return this.categoryFilterWord.trim().toLowerCase();
+  }
+
+  getSelectedCategoryObject(word: string) {
+    for (let cat of this.selectedCategoryObjects) {
+      if (cat['word'] === word) {
+        return cat;
+      }
+    }
+    return null;
+  }
+
+  removeEmptySelectedCategoryObjects() {
+    for(let cat of this.selectedCategoryObjects) {
+      if(cat['word'] !== '' && cat['selectedCategories'].length === 0) {
+        let index = this.selectedCategoryObjects.indexOf(cat);
+        this.selectedCategoryObjects.splice(index, 1);
+      }
+    }
   }
 
   /*

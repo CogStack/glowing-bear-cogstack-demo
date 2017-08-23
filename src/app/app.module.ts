@@ -8,7 +8,6 @@ import {AppComponent} from './app.component';
 
 import {EndpointService} from './modules/shared/services/endpoint.service';
 import {DataSelectionModule} from './modules/data-selection/data-selection.module';
-import {ExportModule} from './modules/export/export.module';
 import {WorkflowService} from './modules/shared/services/workflow.service';
 import {ResourceService} from './modules/shared/services/resource.service';
 import {DimensionRegistryService} from './modules/shared/services/dimension-registry.service';
@@ -34,7 +33,6 @@ export function initConfig(config: AppConfig) {
     routing,
     NavBarModule,
     DataSelectionModule,
-    ExportModule,
     SidePanelModule
   ],
   providers: [

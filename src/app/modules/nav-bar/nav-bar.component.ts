@@ -13,15 +13,13 @@ export class NavBarComponent implements OnInit {
   private _activeItem: MenuItem;
 
   isDataSelection = false;
-  isExport = false;
 
   constructor(private router: Router) {
   }
 
   ngOnInit() {
     this._items = [
-      {label: 'Data Selection', routerLink: '/data-selection'},
-      {label: 'Export', routerLink: '/export'}
+      {label: 'Data Selection', routerLink: '/data-selection'}
     ];
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -33,12 +31,9 @@ export class NavBarComponent implements OnInit {
 
   updateNavbar(whichStep: string) {
     this.isDataSelection = (whichStep === 'data-selection' || whichStep === '');
-    this.isExport = (whichStep === 'export');
 
     if (this.isDataSelection) {
       this._activeItem = this._items[0];
-    } else if (this.isExport) {
-      this._activeItem = this._items[1];
     }
   }
 

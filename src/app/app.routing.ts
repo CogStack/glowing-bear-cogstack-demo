@@ -11,10 +11,6 @@ export const routes: Routes = [
   {
     path: 'data-selection',
     loadChildren: './modules/data-selection/data-selection.module#DataSelectionModule'
-  },
-  {
-    path: 'export',
-    loadChildren: './modules/export/export.module#ExportModule'
   }
 ];
 

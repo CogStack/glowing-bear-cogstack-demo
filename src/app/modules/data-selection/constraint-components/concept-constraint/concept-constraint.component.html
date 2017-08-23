@@ -66,19 +66,35 @@
   </div>
 
   <!-- special categorical area for demo -->
-  <div *ngIf="isSpecialCategorical()" class="v-align-center form-inline">
-    <span>with {{selectedCategories.length}} values</span>
-    <p-autoComplete #categoricalAutoComplete
-                    [(ngModel)]="selectedCategories"
-                    [suggestions]="suggestedCategories"
-                    (completeMethod)="onCategorySearch($event)"
-                    (onSelect)="updateConceptValues($event)"
-                    (onUnselect)="onUnselectCategories($event)"
-                    [multiple]="true"></p-autoComplete>
-    <button type="button" class="btn btn-outline-secondary"
-            (click)="clearAllCategories()">
-      Clear
-    </button>
+  <!--<div *ngIf="isSpecialCategorical()" class="v-align-center form-inline">-->
+    <!--<span>with {{selectedCategories.length}} values</span>-->
+    <!--<p-autoComplete #categoricalAutoComplete-->
+                    <!--[(ngModel)]="selectedCategories"-->
+                    <!--[suggestions]="suggestedCategories"-->
+                    <!--(completeMethod)="onCategorySearch($event)"-->
+                    <!--(onSelect)="updateConceptValues($event)"-->
+                    <!--(onUnselect)="onUnselectCategories($event)"-->
+                    <!--[multiple]="true"></p-autoComplete>-->
+    <!--<button type="button" class="btn btn-outline-secondary"-->
+            <!--(click)="clearAllCategories()">-->
+      <!--Clear-->
+    <!--</button>-->
+  <!--</div>-->
+
+  <div *ngIf="isSpecialCategorical()" style="margin-left: 10px;">
+    <div *ngFor="let selectedCatObj of selectedCategoryObjects" style="display: block;">
+      <span> with filter "{{selectedCatObj['word']}}": </span>
+      <p-autoComplete [(ngModel)]="selectedCatObj['selectedCategories']"
+                      [suggestions]="suggestedCategories"
+                      (completeMethod)="onCategorySearch($event)"
+                      (onSelect)="updateConceptValues($event)"
+                      (onUnselect)="onUnselectCategoryWithFilter($event, selectedCatObj['word'])"
+                      [multiple]="true"></p-autoComplete>
+      <button type="button" class="btn btn-outline-secondary"
+              (click)="clearAllCategoriesWithFilter(selectedCatObj['word'])">
+        Clear
+      </button>
+    </div>
   </div>
 
   <div *ngIf="isSpecialCategorical()" class="v-align-center form-inline">
@@ -97,7 +113,7 @@
   </div>
 
   <div *ngIf="isSpecialCategorical()" class="v-align-center form-inline">
-    <span style="margin-left: 10px; margin-right: 10px; color: #737373;"><small>Filter values:</small></span>
+    <span style="margin-left: 10px; margin-right: 10px; color: #737373;"><small>Filter:</small></span>
     <input style="height: 30px;" type="text" pInputText
            (keyup)="filterAvailableCategories($event)"
            [(ngModel)]="categoryFilterWord"/>
@@ -105,7 +121,7 @@
 
   <div *ngIf="isSpecialCategorical()" class="v-align-center form-inline">
     <span
-      style="margin-left: 10px; margin-right: 10px; color: #737373;"><small>Available values:</small>
+      style="margin-left: 10px; margin-right: 10px; color: #737373;"><small>Available:</small>
     </span>
     <button type="button" class="btn btn-outline-secondary"
             (click)="selectAllCategories()">
