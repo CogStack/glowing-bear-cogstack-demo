@@ -12,20 +12,20 @@ export class EndpointService {
     let apiVersion = appConfig.getConfig('api-version');
     let appUrl = appConfig.getConfig('app-url');
     this.endpoint = new Endpoint(apiUrl, apiVersion, appUrl);
-    let parsedUrl = this.parseUrl(this.getCurrentUrl());
+    // let parsedUrl = this.parseUrl(this.getCurrentUrl());
     // Check if there is authentication data in the hash fragment of the url
-    let oauthGrantFragment: string = parsedUrl.hash;
-    if (oauthGrantFragment.length > 1) {
-      // Update the current endpoint with the received credentials
-      this.initializeEndpointWithCredentials(this.endpoint, oauthGrantFragment);
-      // Save the endpoint
-      this.saveEndpoint();
-    }
-    else {
-      // Read the access token information from the local storage
-      this.restoreEndpointAuthentication();
-    }
-
+    // if(parsedUrl) {
+    //   let oauthGrantFragment: string = parsedUrl.hash;
+    //   if (oauthGrantFragment.length > 1) {
+    //     // Update the current endpoint with the received credentials
+    //     this.initializeEndpointWithCredentials(this.endpoint, oauthGrantFragment);
+    //     // Save the endpoint
+    //     this.saveEndpoint();
+    //   } else {
+    //     // Read the access token information from the local storage
+    //     this.restoreEndpointAuthentication();
+    //   }
+    // }
   }
 
   public getEndpoint() {

@@ -125,7 +125,7 @@
     </span>
     <button type="button" class="btn btn-outline-secondary"
             (click)="selectAllCategories()">
-      Select all ({{getAvailableCategoryCount()}})
+      Select all ({{getAvailableAndShownCategoryCount()}} / {{getAvailableCategoryCount()}})
     </button>
     <div class="form-inline" style="overflow: scroll; min-height: 50px; max-height: 300px; margin-left: 10px; margin-right: 10px; border: solid lightgrey 1px; padding: 5px;">
       <div *ngFor="let catObj of allCategoryChecks" style="margin: 1px;">

@@ -391,10 +391,20 @@ export class ConceptConstraintComponent extends ConstraintComponent implements O
     }
   }
 
-  getAvailableCategoryCount() {
+  getAvailableAndShownCategoryCount() {
     let count = 0;
     for (let catobj of this.allCategoryChecks) {
       if (catobj['checked'] && catobj['shown']) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  getAvailableCategoryCount() {
+    let count = 0;
+    for (let catobj of this.allCategoryChecks) {
+      if (catobj['checked']) {
         count++;
       }
     }

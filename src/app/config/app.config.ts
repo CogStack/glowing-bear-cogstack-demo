@@ -45,6 +45,14 @@ export class AppConfig {
         })
         .map(res => res.json())
         .catch((error: any): any => {
+          this.config = {
+            'api-url': 'http://localhost:8080',
+            'api-version': 'v2',
+            'app-url': 'http://localhost:4200'
+          };
+          this.env = {
+            'env': 'dev'
+          };
           console.error('Configuration file "env.json" could not be read');
           resolve(true);
           return Observable.throw(error.json().error || 'Server error');
