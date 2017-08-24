@@ -69,4 +69,8 @@ export class DataViewComponent implements OnInit {
   onExportPatientTableClick() {
     console.log('export patient data: ', this.patients);
   }
+
+  goToPatientDoc() {
+    window.open('patient-doc.html');
+  }
 }

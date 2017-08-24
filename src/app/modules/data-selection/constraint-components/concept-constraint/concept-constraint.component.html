@@ -81,6 +81,21 @@
     <!--</button>-->
   <!--</div>-->
 
+  <div *ngIf="isSpecialCategorical()" class="v-align-center form-inline" (click)="contextCheck()">
+    <span style="margin-left: 10px; margin-right: 10px; color: #737373;"><small>Context:</small></span>
+    <p-checkbox name="group1" value="positive" [(ngModel)]="selectedContexts"></p-checkbox>
+    <span style="margin-left: -5px; margin-right: 5px;">Positive</span>
+    <p-checkbox name="group1" value="negative" [(ngModel)]="selectedContexts"></p-checkbox>
+    <span style="margin-left: -5px; margin-right: 5px;">Negative</span>
+    <p-checkbox name="group1" value="historical" [(ngModel)]="selectedContexts"></p-checkbox>
+    <span style="margin-left: -5px; margin-right: 5px;">Historical</span>
+    <p-checkbox name="group1" value="hypothetical" [(ngModel)]="selectedContexts"></p-checkbox>
+    <span style="margin-left: -5px; margin-right: 5px;">Hypothetical</span>
+    <p-checkbox name="group1" value="other person" [(ngModel)]="selectedContexts"></p-checkbox>
+    <span style="margin-left: -5px; margin-right: 5px;">Other person</span>
+    <!--<span>{{selectedContexts}}</span>-->
+  </div>
+
   <div *ngIf="isSpecialCategorical()" style="margin-left: 10px;">
     <div *ngFor="let selectedCatObj of selectedCategoryObjects" style="display: block;">
       <span> with filter "{{selectedCatObj['word']}}": </span>
@@ -95,21 +110,6 @@
         Clear
       </button>
     </div>
-  </div>
-
-  <div *ngIf="isSpecialCategorical()" class="v-align-center form-inline" (click)="contextCheck()">
-    <span style="margin-left: 10px; margin-right: 10px; color: #737373;"><small>Context:</small></span>
-    <p-checkbox name="group1" value="positive" [(ngModel)]="selectedContexts"></p-checkbox>
-    <span style="margin-left: -5px; margin-right: 5px;">Positive</span>
-    <p-checkbox name="group1" value="negative" [(ngModel)]="selectedContexts"></p-checkbox>
-    <span style="margin-left: -5px; margin-right: 5px;">Negative</span>
-    <p-checkbox name="group1" value="historical" [(ngModel)]="selectedContexts"></p-checkbox>
-    <span style="margin-left: -5px; margin-right: 5px;">Historical</span>
-    <p-checkbox name="group1" value="hypothetical" [(ngModel)]="selectedContexts"></p-checkbox>
-    <span style="margin-left: -5px; margin-right: 5px;">Hypothetical</span>
-    <p-checkbox name="group1" value="other person" [(ngModel)]="selectedContexts"></p-checkbox>
-    <span style="margin-left: -5px; margin-right: 5px;">Other person</span>
-    <!--<span>{{selectedContexts}}</span>-->
   </div>
 
   <div *ngIf="isSpecialCategorical()" class="v-align-center form-inline">

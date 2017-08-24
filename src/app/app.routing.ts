@@ -11,6 +11,10 @@ export const routes: Routes = [
   {
     path: 'data-selection',
     loadChildren: './modules/data-selection/data-selection.module#DataSelectionModule'
+  },
+  {
+    path: 'patient-document',
+    loadChildren: './modules/patient-document/patient-document.module#PatientDocumentModule'
   }
 ];
 

@@ -4,7 +4,14 @@
                [paginator]="true"
                [pageLinks]="3"
                [rowsPerPageOptions]="[5,10,20]">
-    <p-column field="id" header="Patient ID" [sortable]="true"></p-column>
+    <p-column field="id" header="Patient ID" [sortable]="true">
+      <ng-template let-patient="rowData" pTemplate="body">
+        <a href="patient-doc.html" target="_blank">
+          {{patient['id']}}
+        </a>
+        <!--<button type="button" class="btn btn-link" (click)="goToPatientDoc()">{{patient['id']}}</button>-->
+      </ng-template>
+    </p-column>
     <p-column field="confidence" header="Confidence Level Score" [sortable]="true"></p-column>
     <p-column field="validation" header="Patient Validation" [sortable]="true">
       <ng-template let-col let-patient="rowData" pTemplate="body">

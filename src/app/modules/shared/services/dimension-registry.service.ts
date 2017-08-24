@@ -118,6 +118,8 @@ export class DimensionRegistryService {
         node['icon'] = 'icon-hd';
       } else if (node['type'] === 'CATEGORICAL_OPTION') {
         node['icon'] = 'icon-abc';
+      } else if (node['type'] === 'CATEGORICAL') {
+        node['icon'] = 'icon-hd';
       } else {
         node['icon'] = 'fa-folder-o';
       }
